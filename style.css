@@ -1,0 +1,67 @@
+@import url('https://fonts.googleapis.com/css2?family=Google+Sans:ital,opsz,wght@0,17..18,400..700;1,17..18,400..700&family=Lexend:wght@100..900&family=Varela+Round&display=swap');
+
+:root {
+   --base: #191724;
+   --surface: #1f1d2e;
+   --overlay: #26233a;
+   --muted: #6e6a86;
+   --subtle: #908caa;
+   --text: #e0def4;
+   --red: #eb6f92;
+   --yellow: #f6c177;
+   --pink: #ebbcba;
+   --pine: #31748f;
+   --foam: #9ccfd8;
+   --purple: #c4a7e7;
+   --low: #21202e;
+   --med: #403d52;
+   --high: #524f67;
+}
+
+* {
+   color: var(--text);
+   font-family: "Varela Round";
+}
+
+body {
+   margin: 0;
+   padding: 0;
+   background-color: var(--base);
+}
+
+#sudoku-container {
+   display: flex;
+   border: solid red;
+   justify-content: center;
+   align-items: center;
+   margin: 100px 0px;
+}
+
+#sudoku {
+   display: grid;
+   grid-template-columns: repeat(9, 1fr);
+   grid-template-rows: repeat(9, 1fr);
+   width: 500px;
+   height: 500px;
+   border: 5px solid var(--text);
+}
+
+.sudoku-cell {
+   display: flex;
+   justify-content: center;
+   align-items: center;
+   text-align: center;
+   font-size: 2rem;
+   border: 1px solid var(--text);
+   box-sizing: border-box;
+}
+
+.sudoku-cell:nth-child(9n+3),
+.sudoku-cell:nth-child(9n+6) {
+   border-right: 5px solid var(--text);
+}
+
+.sudoku-cell:nth-child(n+19):nth-child(-n+27),
+.sudoku-cell:nth-child(n+46):nth-child(-n+54) {
+   border-bottom: 5px solid var(--text);
+}
