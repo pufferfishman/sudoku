@@ -1,4 +1,10 @@
 let board = new Array(81).fill(0);
+let userBoard = [];
+
+function start(puzzle) {
+   userBoard = [...puzzle];
+   render(userBoard);
+}
 
 function shuffle(array) {
    for (let i = array.length - 1; i > 0; i--) {
@@ -62,8 +68,8 @@ function digHoles(board, holes) {
    for (const position of positions) {
       if (removed >= holes) break;
 
-      const backup = puzzle[pos];
-      puzzle[pos] = 0;
+      const backup = puzzle[position];
+      puzzle[position] = 0;
 
       const testBoard = [...puzzle];
       const solutions = countSolutions(testBoard);
@@ -71,9 +77,96 @@ function digHoles(board, holes) {
       if (solutions === 1) {
          removed++;
       } else {
-         puzzle[pos] = backup;
+         puzzle[position] = backup;
       }
+
+
    }
 
    return puzzle;
 }
+
+function countSolutions(board) {
+   let count = 0;
+
+   function helper(board) {
+      if (count >= 2) return;
+
+      for (let i = 0; i < 81; i++) {
+         if (board[i] === 0) {
+            const row = Math.floor(i / 9);
+            const column = i % 9;
+            
+            for (let number = 1; number <= 9; number++) {
+               if (isValid(board, row, column, number)) {
+                  board[i] = number;
+                  helper(board);
+                  board[i] = 0;
+
+                  if (count >= 2) return;
+               }
+            }
+
+            return;
+         }
+      }
+
+      count++;
+   }
+
+   helper(board);
+   return count;
+}
+
+function render(puzzle) {
+   for (let i = 0; i < 81; i++) {
+      const element = document.getElementById(`sudoku-${i + 1}`);
+      const value = puzzle[i];
+
+      element.innerHTML = value === 0 ? "" : value; 
+
+      if (value !== 0) {
+         element.classList.add("given");
+         element.classList.remove("editable");
+      } else {
+         element.classList.add("editable");
+         element.classList.remove("given");
+      }
+   }
+}
+
+
+
+
+
+
+
+
+// USER INTERFACE
+let selected = null;
+
+document.querySelectorAll(".sudoku-cell").forEach((element, index) => {
+   element.addEventListener("click", () => {
+      if (!element.classList.contains("editable")) return;
+      selected = index;
+
+      document.querySelectorAll(".sudoku-cell").forEach(c => c.classList.remove("selected"));
+      element.classList.add("selected");
+   })
+})
+
+document.addEventListener("keydown", (e) => {
+   if (selected === null) return;
+
+   const key = e.key;
+
+   if (key >= "1" && key <= "9") {
+      const row = Math.floor(selected / 9);
+      const column = selected % 9;
+      const number = parseInt(key);
+
+      userBoard[selected] = number;
+
+      const element 
+   }
+})

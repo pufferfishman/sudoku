@@ -54,6 +54,7 @@ body {
    font-size: 2rem;
    border: 1px solid var(--text);
    box-sizing: border-box;
+   background: var(--base);
 }
 
 .sudoku-cell:nth-child(9n+3),
@@ -64,4 +65,16 @@ body {
 .sudoku-cell:nth-child(n+19):nth-child(-n+27),
 .sudoku-cell:nth-child(n+46):nth-child(-n+54) {
    border-bottom: 5px solid var(--text);
+}
+
+.given {
+   color: var(--text);
+}
+
+.editable {
+   color: var(--foam);
+}
+
+.editable:hover {
+   background-color: var(--high)
 }
