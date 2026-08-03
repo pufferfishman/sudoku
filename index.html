@@ -9,17 +9,19 @@
 </head>
 
 <body>
+   <div id="title">Sudoku</div>
+   <div id="subtitle"></div>
    <div id="sudoku-container">
       <div id="sudoku">
-         <div class="sudoku-cell" id="sudoku-1">1</div>
-         <div class="sudoku-cell" id="sudoku-2">2</div>
-         <div class="sudoku-cell" id="sudoku-3">3</div>
-         <div class="sudoku-cell" id="sudoku-4">4</div>
-         <div class="sudoku-cell" id="sudoku-5">5</div>
-         <div class="sudoku-cell" id="sudoku-6">6</div>
-         <div class="sudoku-cell" id="sudoku-7">7</div>
-         <div class="sudoku-cell" id="sudoku-8">8</div>
-         <div class="sudoku-cell" id="sudoku-9">9</div>
+         <div class="sudoku-cell" id="sudoku-1"></div>
+         <div class="sudoku-cell" id="sudoku-2"></div>
+         <div class="sudoku-cell" id="sudoku-3"></div>
+         <div class="sudoku-cell" id="sudoku-4"></div>
+         <div class="sudoku-cell" id="sudoku-5"></div>
+         <div class="sudoku-cell" id="sudoku-6"></div>
+         <div class="sudoku-cell" id="sudoku-7"></div>
+         <div class="sudoku-cell" id="sudoku-8"></div>
+         <div class="sudoku-cell" id="sudoku-9"></div>
          <div class="sudoku-cell" id="sudoku-10"></div>
          <div class="sudoku-cell" id="sudoku-11"></div>
          <div class="sudoku-cell" id="sudoku-12"></div>
@@ -92,6 +94,23 @@
          <div class="sudoku-cell" id="sudoku-79"></div>
          <div class="sudoku-cell" id="sudoku-80"></div>
          <div class="sudoku-cell" id="sudoku-81"></div>
+      </div>
+
+      <div id="ui-container">
+         <div id="timer">Time: 00:00</div>
+         <div id="numbers-container">
+            <button class="number" id="number-1">1</button>
+            <button class="number" id="number-2">2</button>
+            <button class="number" id="number-3">3</button>
+            <button class="number" id="number-4">4</button>
+            <button class="number" id="number-5">5</button>
+            <button class="number" id="number-6">6</button>
+            <button class="number" id="number-7">7</button>
+            <button class="number" id="number-8">8</button>
+            <button class="number" id="number-9">9</button>
+         </div>
+
+         <button id="start">New Game</button>
       </div>
    </div>
    <script src="script.js"></script>

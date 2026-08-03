@@ -167,6 +167,19 @@ document.addEventListener("keydown", (e) => {
 
       userBoard[selected] = number;
 
-      const element 
+      const element = document.getElementById(`sudoku-${selected + 1}`);
+      element.innerHTML = number;
+
+      const tempBoard = [...userBoard];
+      tempBoard[selected] = 0;
+      const valid = isValid(tempBoard, row, column, number);
+
+      element.classList.toggle("invalid", !valid);
+   }
+
+   if (key === "Backspace" || key === "Delete") {
+      userBoard[selected] = 0;
+      document.getElementById(`sudoku-${selected + 1}`).innerHTML = "";
+      document.getElementById(`sudoku-${selected + 1}`).classList.remove("invalid");
    }
 })

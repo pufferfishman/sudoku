@@ -41,8 +41,8 @@ body {
    display: grid;
    grid-template-columns: repeat(9, 1fr);
    grid-template-rows: repeat(9, 1fr);
-   width: 500px;
-   height: 500px;
+   width: 600px;
+   height: 600px;
    border: 5px solid var(--text);
 }
 
@@ -55,6 +55,7 @@ body {
    border: 1px solid var(--text);
    box-sizing: border-box;
    background: var(--base);
+   user-select: none;
 }
 
 .sudoku-cell:nth-child(9n+3),
@@ -69,6 +70,7 @@ body {
 
 .given {
    color: var(--text);
+   cursor: default;
 }
 
 .editable {
@@ -76,5 +78,22 @@ body {
 }
 
 .editable:hover {
-   background-color: var(--high)
+   background-color: var(--high);
+   cursor: pointer;
+}
+
+.invalid {
+   color: var(--red)
+}
+
+.selected {
+   background-color: var(--med);
+}
+
+#ui-container {
+   border: solid red;
+}
+
+.number {
+
 }
