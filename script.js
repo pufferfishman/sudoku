@@ -15,6 +15,12 @@ function start() {
    document.getElementById("timer").innerHTML = "Time: 00:00";
    timer = 0;
 
+   selected = null;
+   document.querySelectorAll(".sudoku-cell").forEach(c => {
+      c.classList.remove("selected");
+      c.classList.remove("highlighted");
+   })
+
    let solved = new Array(81).fill(0);
    solve(solved);
    let puzzle = digHoles(solved, difficulties[difficulty]);
