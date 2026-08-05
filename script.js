@@ -1,9 +1,31 @@
 let board = new Array(81).fill(0);
 let userBoard = [];
+let selected = null;
+let difficulty = [3]
+let timer = 0;
+let timerInterval = null;
 
-function start(puzzle) {
+function start() {
+   clearInterval(timerInterval);
+   document.getElementById("timer").innerHTML = "Time: 00:00";
+   timer = 0;
+
+   let solved = new Array(81).fill(0);
+   solve(solved);
+   let puzzle = digHoles(solved, 40);
    userBoard = [...puzzle];
    render(userBoard);
+
+   timerInterval = setInterval(() => {
+      timer++;
+
+      const minutes = Math.floor(timer / 60);
+      const seconds = timer % 60;
+
+      const formatted = "Time: " + String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+
+      document.getElementById("timer").innerHTML = formatted;
+   }, 1000);
 }
 
 function shuffle(array) {
@@ -15,7 +37,7 @@ function shuffle(array) {
    return array;
 }
 
-function cell(row, column) {return (row * 9 + column);} // convert row and column to cell index
+function cell(row, column) { return (row * 9 + column); } // convert row and column to cell index
 
 function isValid(board, row, column, number) {
    for (let i = 0; i < 9; i++) {
@@ -56,7 +78,7 @@ function solve(board) {
          return false;
       }
    }
-   
+
    return true; // solved
 }
 
@@ -96,7 +118,7 @@ function countSolutions(board) {
          if (board[i] === 0) {
             const row = Math.floor(i / 9);
             const column = i % 9;
-            
+
             for (let number = 1; number <= 9; number++) {
                if (isValid(board, row, column, number)) {
                   board[i] = number;
@@ -123,7 +145,7 @@ function render(puzzle) {
       const element = document.getElementById(`sudoku-${i + 1}`);
       const value = puzzle[i];
 
-      element.innerHTML = value === 0 ? "" : value; 
+      element.innerHTML = value === 0 ? "" : value;
 
       if (value !== 0) {
          element.classList.add("given");
@@ -135,6 +157,36 @@ function render(puzzle) {
    }
 }
 
+function fillCell(number) {
+   if (selected === null) return;
+
+   const element = document.getElementById(`sudoku-${selected + 1}`);
+   if (!element.classList.contains("editable")) return;
+
+   const row = Math.floor(selected / 9);
+   const column = selected % 9;
+
+   userBoard[selected] = number;
+   element.innerHTML = number;
+
+   const tempBoard = [...userBoard];
+   tempBoard[selected] = 0;
+   const valid = isValid(tempBoard, row, column, number);
+
+   element.classList.toggle("invalid", !valid);
+}
+
+function clearCell() {
+   if (selected === null) return;
+
+   const element = document.getElementById(`sudoku-${selected + 1}`);
+   if (!element.classList.contains("editable")) return;
+
+   userBoard[selected] = 0;
+   element.innerHTML = "";
+   element.classList.remove("invalid");
+}
+
 
 
 
@@ -143,8 +195,6 @@ function render(puzzle) {
 
 
 // USER INTERFACE
-let selected = null;
-
 document.querySelectorAll(".sudoku-cell").forEach((element, index) => {
    element.addEventListener("click", () => {
       if (!element.classList.contains("editable")) return;
@@ -156,30 +206,22 @@ document.querySelectorAll(".sudoku-cell").forEach((element, index) => {
 })
 
 document.addEventListener("keydown", (e) => {
-   if (selected === null) return;
-
    const key = e.key;
 
    if (key >= "1" && key <= "9") {
-      const row = Math.floor(selected / 9);
-      const column = selected % 9;
-      const number = parseInt(key);
-
-      userBoard[selected] = number;
-
-      const element = document.getElementById(`sudoku-${selected + 1}`);
-      element.innerHTML = number;
-
-      const tempBoard = [...userBoard];
-      tempBoard[selected] = 0;
-      const valid = isValid(tempBoard, row, column, number);
-
-      element.classList.toggle("invalid", !valid);
+      fillCell(parseInt(key));
    }
 
    if (key === "Backspace" || key === "Delete") {
-      userBoard[selected] = 0;
-      document.getElementById(`sudoku-${selected + 1}`).innerHTML = "";
-      document.getElementById(`sudoku-${selected + 1}`).classList.remove("invalid");
+      clearCell();
    }
 })
+
+document.querySelectorAll(".number").forEach((btn) => {
+   if (btn.id === "clear") return;
+
+   const number = parseInt(btn.innerHTML);
+   btn.addEventListener("click", () => fillCell(number));
+})
+
+

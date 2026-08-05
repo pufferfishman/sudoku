@@ -31,10 +31,11 @@ body {
 
 #sudoku-container {
    display: flex;
-   border: solid red;
    justify-content: center;
    align-items: center;
    margin: 100px 0px;
+   gap: 50px;
+   flex-wrap: wrap;
 }
 
 #sudoku {
@@ -51,8 +52,8 @@ body {
    justify-content: center;
    align-items: center;
    text-align: center;
-   font-size: 2rem;
-   border: 1px solid var(--text);
+   font-size: 2.5rem;
+   border: 1px solid var(--high);
    box-sizing: border-box;
    background: var(--base);
    user-select: none;
@@ -91,9 +92,62 @@ body {
 }
 
 #ui-container {
-   border: solid red;
+}
+
+button {
+   color: var(--text);
+   background: var(--surface);
+   border: solid var(--subtle) 5px;
+   font-family: "Varela Round";
+   cursor: pointer;
+   border-radius: 5px;
+}
+
+#numbers-container {
+   display: grid;
+   justify-content: center;
+   align-items: center;
+   grid-template-rows: repeat(4, 1fr);
+   grid-template-columns: repeat(3, 1fr);
+   gap: 15px;
 }
 
 .number {
-
+   font-size: 3rem;
+   width: 100px;
+   height: 100px;
 }
+
+#clear {
+   width: 330px;
+   grid-column: span 3 / span 3;
+   height: 75px;
+   font-size: 2rem;
+   margin-top: -20px;
+}
+
+#start {
+   grid-column: span 3 / span 3;
+   height: 75px;
+   font-size: 2rem;
+   margin-top: -20px;
+   background: var(--text);
+   color: var(--base);
+}
+
+#title {
+   text-align: center;
+   font-size: 48px;
+   margin-top: 20px;
+}
+
+#subtitle {
+   text-align: center;
+   font-size: 24px;
+}
+
+#timer {
+   margin-bottom: 20px;
+   font-size: 32px;
+}
+
