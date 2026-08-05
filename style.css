@@ -147,7 +147,33 @@ button {
 }
 
 #timer {
-   margin-bottom: 20px;
+   margin-bottom: 10px;
    font-size: 32px;
 }
 
+.difficulty-selected {
+   background: var(--text);
+   color: var(--base);
+}
+
+.difficulty {
+   font-size: 16px;
+}
+
+.number:hover {
+   background-color: var(--med);
+}
+
+.difficulty:hover {
+   background-color: var(--med);
+}
+
+.difficulty-selected:hover {
+   background-color: var(--text);
+   color: var(--high);
+}
+
+#start:hover {
+   background-color: var(--text);
+   color: var(--high);
+}

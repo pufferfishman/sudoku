@@ -1,7 +1,12 @@
 let board = new Array(81).fill(0);
 let userBoard = [];
 let selected = null;
-let difficulty = [3]
+let difficulties = {
+   easy: 1,
+   medium: 45,
+   hard: 55
+}
+let difficulty = "easy";
 let timer = 0;
 let timerInterval = null;
 
@@ -12,7 +17,7 @@ function start() {
 
    let solved = new Array(81).fill(0);
    solve(solved);
-   let puzzle = digHoles(solved, 40);
+   let puzzle = digHoles(solved, difficulties[difficulty]);
    userBoard = [...puzzle];
    render(userBoard);
 
@@ -174,6 +179,16 @@ function fillCell(number) {
    const valid = isValid(tempBoard, row, column, number);
 
    element.classList.toggle("invalid", !valid);
+
+   if (checkWin()) {
+      clearInterval(timerInterval);
+
+      const minutes = Math.floor(timer / 60);
+      const seconds = timer % 60;
+      const formatted = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+
+      setTimeout(() => {alert("You completed this puzzle in " + formatted + "!");}, 100);
+   }
 }
 
 function clearCell() {
@@ -187,6 +202,24 @@ function clearCell() {
    element.classList.remove("invalid");
 }
 
+function checkWin() {
+   if (userBoard.includes(0)) return false;
+
+   for (let i = 0; i < 81; i++) {
+      const row = Math.floor(i / 9);
+      const column = i % 9;
+      const number = userBoard[i];
+
+      const tempBoard = [...userBoard];
+      tempBoard[i] = 0;
+
+      if (!isValid(tempBoard, row, column, number)) {
+         return false;
+      }
+   }
+
+   return true;
+}
 
 
 
@@ -224,4 +257,11 @@ document.querySelectorAll(".number").forEach((btn) => {
    btn.addEventListener("click", () => fillCell(number));
 })
 
+document.querySelectorAll(".difficulty").forEach((btn) => {
+   btn.addEventListener("click", () => {
+      difficulty = btn.dataset.level;
 
+      document.querySelectorAll(".difficulty").forEach(b => b.classList.remove("difficulty-selected"));
+      btn.classList.add("difficulty-selected");
+   })
+})
