@@ -2,7 +2,7 @@ let board = new Array(81).fill(0);
 let userBoard = [];
 let selected = null;
 let difficulties = {
-   easy: 1,
+   easy: 35,
    medium: 45,
    hard: 55
 }
@@ -189,6 +189,8 @@ function fillCell(number) {
 
       setTimeout(() => {alert("You completed this puzzle in " + formatted + "!");}, 100);
    }
+
+   highlightRelated(selected);
 }
 
 function clearCell() {
@@ -200,6 +202,8 @@ function clearCell() {
    userBoard[selected] = 0;
    element.innerHTML = "";
    element.classList.remove("invalid");
+
+   highlightRelated(selected);
 }
 
 function checkWin() {
@@ -221,6 +225,30 @@ function checkWin() {
    return true;
 }
 
+function highlightRelated(cell) {
+   document.querySelectorAll(".sudoku-cell").forEach(c => c.classList.remove("highlighted"));
+
+   const row = Math.floor(cell / 9);
+   const column = cell % 9;
+   const boxRow = Math.floor(row / 3) * 3;
+   const boxColumn = Math.floor(column / 3) * 3;
+   const number = userBoard[cell];
+
+   for (let i = 0; i < 81; i++) {
+      const r = Math.floor(i / 9);
+      const c = i % 9;
+
+      const sameRow = r === row;
+      const sameColumn = c === column;
+      const sameBox = r >= boxRow && r < boxRow + 3 && c >= boxColumn && c < boxColumn + 3;
+      const sameNumber = number !== 0 && userBoard[i] === number;
+
+      if (i !== cell && (sameRow || sameColumn || sameBox || sameNumber)) {
+         document.getElementById(`sudoku-${i + 1}`).classList.add("highlighted");
+      }
+   }
+}
+
 
 
 
@@ -235,6 +263,8 @@ document.querySelectorAll(".sudoku-cell").forEach((element, index) => {
 
       document.querySelectorAll(".sudoku-cell").forEach(c => c.classList.remove("selected"));
       element.classList.add("selected");
+
+      highlightRelated(index);
    })
 })
 
