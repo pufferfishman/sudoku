@@ -300,7 +300,6 @@ function renderCell(cell) {
 
 
 
-
 // USER INTERFACE
 document.querySelectorAll(".sudoku-cell").forEach((element, index) => {
    element.addEventListener("click", () => {
@@ -346,4 +345,33 @@ document.getElementById("notes-toggle").addEventListener("click", () => {
    notesMode = !notesMode;
    document.getElementById("notes-toggle").classList.toggle("toggled", notesMode);
    document.getElementById("notes-toggle").innerHTML = notesMode ? "Notes: ON" : "Notes: OFF";
+});
+
+let solveInterval = null;
+document.getElementById("solve").addEventListener("click", () => {
+   clearInterval(timerInterval);
+   clearInterval(solveInterval);
+
+   const solvedBoard =[...userBoard];
+   solve(solvedBoard);
+
+   const emptyCells = [];
+   for (let i = 0; i < 81; i++) {
+      if (userBoard[i] === 0) {
+         emptyCells.push({ index: i, value: solvedBoard[i]});
+      }
+   }
+
+   shuffle(emptyCells);
+
+   solveInterval = setInterval(() => {
+      if (emptyCells.length === 0) {
+         clearInterval(solveInterval);
+         return;
+      }
+
+      const { index, value} = emptyCells.shift();
+      userBoard[index] = value;
+      renderCell(index);
+   }, 50);
 });

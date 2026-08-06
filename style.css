@@ -127,19 +127,26 @@ button {
    margin-top: -20px;
 }
 
-#start {
-   grid-column: span 3 / span 3;
+#start, #solve {
+   flex: 1;
    height: 75px;
-   font-size: 2rem;
-   margin-top: -20px;
+   font-size: 1.5rem;
    background: var(--text);
    color: var(--base);
+}
+
+#button-container {
+   grid-column: span 3 / span 3;
+   display: flex;
+   gap: 15px;
+   margin-top: -20px;
 }
 
 #title {
    text-align: center;
    font-size: 48px;
    margin-top: 20px;
+   margin-bottom: 5px;
 }
 
 #subtitle {
@@ -173,7 +180,7 @@ button {
    color: var(--high);
 }
 
-#start:hover {
+#start:hover, #solve:hover {
    background-color: var(--text);
    color: var(--high);
 }
