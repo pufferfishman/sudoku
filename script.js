@@ -11,9 +11,15 @@ let timer = 0;
 let timerInterval = null;
 let notes = [];
 let notesMode = false;
+let inputDisabled = false;
 
 function start() {
    clearInterval(timerInterval);
+   clearInterval(solveInterval);
+
+   disableInput(false);
+   inputDisabled = false;
+
    document.getElementById("timer").innerHTML = "Time: 00:00";
    timer = 0;
 
@@ -296,6 +302,37 @@ function renderCell(cell) {
    }
 }
 
+function disableInput(disabled) {
+   inputDisabled = disabled;
+
+   document.querySelectorAll(".number").forEach(btn => btn.disabled = disabled);
+   document.getElementById("notes-toggle").disabled = disabled;
+   document.getElementById("solve").disabled = disabled;
+
+   document.querySelectorAll(".sudoku-cell").forEach(c => {
+      c.style.pointerEvents = disabled ? "none" : "";
+   });
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -314,6 +351,8 @@ document.querySelectorAll(".sudoku-cell").forEach((element, index) => {
 });
 
 document.addEventListener("keydown", (e) => {
+   if (inputDisabled) return;
+
    const key = e.key;
 
    if (key >= "1" && key <= "9") {
@@ -352,6 +391,16 @@ document.getElementById("solve").addEventListener("click", () => {
    clearInterval(timerInterval);
    clearInterval(solveInterval);
 
+   selected = null;
+   document.querySelectorAll(".sudoku-cell").forEach(c => {
+      c.classList.remove("selected");
+      c.classList.remove("highlighted");
+   })
+
+   highlightRelated();
+   disableInput(true);
+   document.getElementById("start").disabled = true;
+
    const solvedBoard =[...userBoard];
    solve(solvedBoard);
 
@@ -374,4 +423,8 @@ document.getElementById("solve").addEventListener("click", () => {
       userBoard[index] = value;
       renderCell(index);
    }, 50);
+
+   setTimeout(() => {
+      document.getElementById("start").disabled = false;
+   }, 50 * emptyCells.length);
 });

@@ -226,3 +226,8 @@ button {
    justify-content: center;
    color: var(--subtle);
 }
+
+button:disabled {
+   opacity: 0.4;
+   cursor: not-allowed;
+}
