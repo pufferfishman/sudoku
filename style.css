@@ -148,8 +148,7 @@ button {
 }
 
 #timer {
-   margin-bottom: 10px;
-   font-size: 32px;
+   font-size: 24px;
 }
 
 .difficulty-selected {
@@ -177,4 +176,46 @@ button {
 #start:hover {
    background-color: var(--text);
    color: var(--high);
+}
+
+#top-ui-container {
+   display: flex;
+   justify-content: space-between;
+   align-items: center;
+   margin-bottom: 10px;
+}
+
+#notes-toggle {
+   font-size: 18px;
+   width: 125px;
+   background-color: var(--base);
+   color: var(--text);
+}
+
+#notes-toggle:hover {
+   background-color: var(--med);
+}
+
+#notes-toggle.toggled {
+   background-color: var(--text);
+   color: var(--base);
+}
+
+#notes-toggle.toggled:hover {
+   background-color: var(--text);
+   color: var(--high);
+}
+
+.sudoku-cell.notes-view {
+   display: grid;
+   grid-template-columns: repeat(3, 1fr);
+   grid-template-rows: repeat(3, 1fr);
+   font-size: 0.9rem;
+}
+
+.note {
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: var(--subtle);
 }

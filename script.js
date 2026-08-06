@@ -9,6 +9,8 @@ let difficulties = {
 let difficulty = "easy";
 let timer = 0;
 let timerInterval = null;
+let notes = [];
+let notesMode = false;
 
 function start() {
    clearInterval(timerInterval);
@@ -25,6 +27,7 @@ function start() {
    solve(solved);
    let puzzle = digHoles(solved, difficulties[difficulty]);
    userBoard = [...puzzle];
+   notes = Array.from({ length: 81 }, () => new Set());
    render(userBoard);
 
    timerInterval = setInterval(() => {
@@ -174,17 +177,25 @@ function fillCell(number) {
    const element = document.getElementById(`sudoku-${selected + 1}`);
    if (!element.classList.contains("editable")) return;
 
+   if (notesMode) {
+      toggleNote(selected, number);
+      return;
+   }
+
    const row = Math.floor(selected / 9);
    const column = selected % 9;
 
    userBoard[selected] = number;
-   element.innerHTML = number;
+   notes[selected].clear();
+   renderCell(selected);
 
    const tempBoard = [...userBoard];
    tempBoard[selected] = 0;
    const valid = isValid(tempBoard, row, column, number);
 
    element.classList.toggle("invalid", !valid);
+
+   highlightRelated(selected);
 
    if (checkWin()) {
       clearInterval(timerInterval);
@@ -195,8 +206,6 @@ function fillCell(number) {
 
       setTimeout(() => {alert("You completed this puzzle in " + formatted + "!");}, 100);
    }
-
-   highlightRelated(selected);
 }
 
 function clearCell() {
@@ -206,7 +215,8 @@ function clearCell() {
    if (!element.classList.contains("editable")) return;
 
    userBoard[selected] = 0;
-   element.innerHTML = "";
+   notes[selected].clear();
+   renderCell(selected);
    element.classList.remove("invalid");
 
    highlightRelated(selected);
@@ -255,6 +265,36 @@ function highlightRelated(cell) {
    }
 }
 
+function toggleNote(cell, number) {
+   if (userBoard[cell] !== 0) return;
+
+   if (notes[cell].has(number)) {
+      notes[cell].delete(number);
+   } else {
+      notes[cell].add(number);
+   }
+
+   renderCell(cell);
+}
+
+function renderCell(cell) {
+   const element = document.getElementById(`sudoku-${cell + 1}`);
+
+   if (userBoard[cell] !== 0) {
+      element.innerHTML = userBoard[cell];
+      element.classList.remove("notes-view");
+   } else if (notes[cell].size > 0) {
+      let notesHTML = "";
+      for (let n = 1; n <= 9; n++) {
+         notesHTML += `<span class="note">${notes[cell].has(n) ? n : ""}</span>`;
+      }
+      element.innerHTML = notesHTML;
+      element.classList.add("notes-view");
+   } else {
+      element.innerHTML = "";
+      element.classList.remove("notes-view");
+   }
+}
 
 
 
@@ -272,7 +312,7 @@ document.querySelectorAll(".sudoku-cell").forEach((element, index) => {
 
       highlightRelated(index);
    })
-})
+});
 
 document.addEventListener("keydown", (e) => {
    const key = e.key;
@@ -284,14 +324,14 @@ document.addEventListener("keydown", (e) => {
    if (key === "Backspace" || key === "Delete") {
       clearCell();
    }
-})
+});
 
 document.querySelectorAll(".number").forEach((btn) => {
    if (btn.id === "clear") return;
 
    const number = parseInt(btn.innerHTML);
    btn.addEventListener("click", () => fillCell(number));
-})
+});
 
 document.querySelectorAll(".difficulty").forEach((btn) => {
    btn.addEventListener("click", () => {
@@ -300,4 +340,10 @@ document.querySelectorAll(".difficulty").forEach((btn) => {
       document.querySelectorAll(".difficulty").forEach(b => b.classList.remove("difficulty-selected"));
       btn.classList.add("difficulty-selected");
    })
-})
+});
+
+document.getElementById("notes-toggle").addEventListener("click", () => {
+   notesMode = !notesMode;
+   document.getElementById("notes-toggle").classList.toggle("toggled", notesMode);
+   document.getElementById("notes-toggle").innerHTML = notesMode ? "Notes: ON" : "Notes: OFF";
+});
