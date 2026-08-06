@@ -155,7 +155,8 @@ button {
 }
 
 #timer {
-   font-size: 24px;
+   font-size: 30px;
+   width: 100px;
 }
 
 .difficulty-selected {
@@ -187,19 +188,20 @@ button {
 
 #top-ui-container {
    display: flex;
-   justify-content: space-between;
+   justify-content: center;
+   gap: 15px;
    align-items: center;
    margin-bottom: 10px;
 }
 
-#notes-toggle {
+#notes-toggle, #hint {
    font-size: 18px;
-   width: 125px;
+   width: 100px;
    background-color: var(--base);
    color: var(--text);
 }
 
-#notes-toggle:hover {
+#notes-toggle:hover, #hint:hover {
    background-color: var(--med);
 }
 

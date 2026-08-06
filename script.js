@@ -12,15 +12,20 @@ let timerInterval = null;
 let notes = [];
 let notesMode = false;
 let inputDisabled = false;
+let hints = 3;
 
 function start() {
    clearInterval(timerInterval);
    clearInterval(solveInterval);
 
+   hints = 3;
+   document.getElementById("hint").disabled = false;
+   document.getElementById("hint").innerHTML = `Hints: ${hints}`;
+
    disableInput(false);
    inputDisabled = false;
 
-   document.getElementById("timer").innerHTML = "Time: 00:00";
+   document.getElementById("timer").innerHTML = "00:00";
    timer = 0;
 
    selected = null;
@@ -42,7 +47,7 @@ function start() {
       const minutes = Math.floor(timer / 60);
       const seconds = timer % 60;
 
-      const formatted = "Time: " + String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+      const formatted = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
 
       document.getElementById("timer").innerHTML = formatted;
    }, 1000);
@@ -308,6 +313,7 @@ function disableInput(disabled) {
    document.querySelectorAll(".number").forEach(btn => btn.disabled = disabled);
    document.getElementById("notes-toggle").disabled = disabled;
    document.getElementById("solve").disabled = disabled;
+   document.getElementById("hint").disabled = disabled || hints <= 0;
 
    document.querySelectorAll(".sudoku-cell").forEach(c => {
       c.style.pointerEvents = disabled ? "none" : "";
@@ -383,7 +389,6 @@ document.querySelectorAll(".difficulty").forEach((btn) => {
 document.getElementById("notes-toggle").addEventListener("click", () => {
    notesMode = !notesMode;
    document.getElementById("notes-toggle").classList.toggle("toggled", notesMode);
-   document.getElementById("notes-toggle").innerHTML = notesMode ? "Notes: ON" : "Notes: OFF";
 });
 
 let solveInterval = null;
@@ -427,4 +432,59 @@ document.getElementById("solve").addEventListener("click", () => {
    setTimeout(() => {
       document.getElementById("start").disabled = false;
    }, 50 * emptyCells.length);
+});
+
+document.getElementById("hint").addEventListener("click", () => {
+   if (inputDisabled) return;
+   if (hints <= 0) {
+      document.getElementById("hint").disabled = true;
+      return;
+   };
+
+   const emptyCells = [];
+   for (let i = 0; i < 81; i++) {
+      if (userBoard[i] === 0) {
+         emptyCells.push(i);
+      }
+   }
+
+   if(emptyCells.length === 0) return;
+
+   const solvedBoard = [...userBoard];
+   solve(solvedBoard);
+
+   const randomIndex = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+   const value = solvedBoard[randomIndex];
+
+   userBoard[randomIndex] = value;
+   notes[randomIndex].clear();
+   renderCell(randomIndex);
+
+   const element = document.getElementById(`sudoku-${randomIndex + 1}`);
+   element.classList.remove("invalid");
+   element.classList.add("editable");
+
+   hints--;
+   document.getElementById("hint").innerHTML = `Hints: ${hints}`;
+   if (hints <= 0) {
+      document.getElementById("hint").disabled = true;
+   }
+
+   selected = randomIndex;
+   document.querySelectorAll(".sudoku-cell").forEach(c => {
+      c.classList.remove("selected");
+      c.classList.remove("highlighted");
+   })
+   element.classList.add("selected");
+   
+
+   highlightRelated(randomIndex);
+
+   if (checkWin()) {
+      clearInterval(timerInterval);
+      const minutes = Math.floor(timer / 60);
+      const seconds = timer % 60;
+      const formatted = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
+      setTimeout(() => { alert("You completed this puzzle in " + formatted + "!"); }, 100);
+   }
 });
