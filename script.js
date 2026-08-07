@@ -2,7 +2,7 @@ let board = new Array(81).fill(0);
 let userBoard = [];
 let selected = null;
 let difficulties = {
-   easy: 1,
+   easy: 35,
    medium: 45,
    hard: 55
 }
