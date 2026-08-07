@@ -2,7 +2,7 @@ let board = new Array(81).fill(0);
 let userBoard = [];
 let selected = null;
 let difficulties = {
-   easy: 35,
+   easy: 1,
    medium: 45,
    hard: 55
 }
@@ -23,6 +23,7 @@ function start() {
    document.getElementById("hint").innerHTML = `Hints: ${hints}`;
 
    disableInput(false);
+   document.getElementById("solve").disabled = false;
    inputDisabled = false;
 
    document.getElementById("timer").innerHTML = "00:00";
@@ -33,6 +34,7 @@ function start() {
       c.classList.remove("selected");
       c.classList.remove("highlighted");
    })
+
 
    let solved = new Array(81).fill(0);
    solve(solved);
@@ -171,6 +173,7 @@ function render(puzzle) {
       const value = puzzle[i];
 
       element.innerHTML = value === 0 ? "" : value;
+      element.classList.remove("notes-view", "invalid", "selected", "highlighted");
 
       if (value !== 0) {
          element.classList.add("given");
@@ -210,6 +213,8 @@ function fillCell(number) {
 
    if (checkWin()) {
       clearInterval(timerInterval);
+      document.getElementById("solve").disabled = true;
+      disableInput(true);
 
       const minutes = Math.floor(timer / 60);
       const seconds = timer % 60;
@@ -402,7 +407,15 @@ document.getElementById("solve").addEventListener("click", () => {
       c.classList.remove("highlighted");
    })
 
-   highlightRelated();
+   for (let i = 0; i < 81; i++) {
+      const element = document.getElementById(`sudoku-${i + 1}`);
+      if (element.classList.contains("editable")) {
+         userBoard[i] = 0;
+         notes[i].clear();
+      }
+   }
+   render(userBoard);
+
    disableInput(true);
    document.getElementById("start").disabled = true;
 
@@ -482,6 +495,9 @@ document.getElementById("hint").addEventListener("click", () => {
 
    if (checkWin()) {
       clearInterval(timerInterval);
+      document.getElementById("solve").disabled = true;
+      disableInput(true);
+
       const minutes = Math.floor(timer / 60);
       const seconds = timer % 60;
       const formatted = String(minutes).padStart(2, "0") + ":" + String(seconds).padStart(2, "0");
